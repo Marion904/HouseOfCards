@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">HouseOfCards</string>
+    <string name="ministre">Ministre</string>
+    <string name="depute">Député</string>
+    <string name="checkBoxMinistre">Ministre</string>
+    <string name="checkBoxDeputy">Député</string>
+</resources>
