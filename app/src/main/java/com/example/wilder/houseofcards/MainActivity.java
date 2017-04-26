@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener{
 
     private ListView PolList;
     private ArrayList<Politicien> arrayPol;
@@ -29,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new PoliticienAdapter(arrayPol,R.layout.item_politician,this);
         ministre = (CheckBox) findViewById(R.id.checkBoxMinistre);
         ministre.isChecked();
+        ministre.setOnCheckedChangeListener(this);
 
         deputy = (CheckBox) findViewById(R.id.checkBoxDeputy);
         deputy.isChecked();
+        deputy.setOnCheckedChangeListener(this);
 
         Depute truc = new Depute("Marine",75000,1000000, Parti.FN,false);
         truc.cauchtByMediaPart();
@@ -56,20 +58,34 @@ public class MainActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
-        //mAdapter2 = new PoliticienAdapter(arrayPol,R.layout.item_politician,this);
-        ministre.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mAdapter.getFilter().filter(Integer.toString(Politicien.DEPUTE));
-            }
-        });
+    }
 
-        deputy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(buttonView==deputy){
+            if(isChecked && ministre.isChecked()){
+                mAdapter.setElus(arrayPol);
+                mAdapter.getFilter().filter(null);
+                return;
+            }if(isChecked && !ministre.isChecked()){
+                mAdapter.setElus(arrayPol);
                 mAdapter.getFilter().filter(Integer.toString(Politicien.DEPUTE));
+                return;
             }
-        });
+            mAdapter.getFilter().filter(Integer.toString(Politicien.MINISTRE));
+        }
+        if(buttonView==ministre){
+            if(isChecked && deputy.isChecked()){
+                mAdapter.setElus(arrayPol);
+                mAdapter.getFilter().filter(null);
+                return;
+            }if(isChecked && !deputy.isChecked()){
+                mAdapter.setElus(arrayPol);
+                mAdapter.getFilter().filter(Integer.toString(Politicien.MINISTRE));
+                return;
+            }
+            mAdapter.getFilter().filter(Integer.toString(Politicien.DEPUTE));
 
+        }
     }
 }

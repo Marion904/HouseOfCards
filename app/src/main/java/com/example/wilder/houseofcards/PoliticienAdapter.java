@@ -35,6 +35,9 @@ public class PoliticienAdapter extends BaseAdapter implements Filterable{
     }
 
 
+    public void setElus(ArrayList<Politicien> array){
+        this.elus = array;
+    }
     @Override
     public int getCount() {
         return elus.size();
@@ -85,23 +88,20 @@ public class PoliticienAdapter extends BaseAdapter implements Filterable{
     public Filter getFilter() {
 
         Filter filter = new Filter() {
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                ArrayList<Politicien> arrayElus = (ArrayList<Politicien>) results.values;
-                PoliticienAdapter.this.notifyDataSetChanged();
-            }
+
+
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 ArrayList<Politicien> filteredElus = new ArrayList<>();
                 FilterResults results = new FilterResults();
-// We implement here the filter logic
+                // We implement here the filter logic
                 if (constraint == null || constraint.length() == 0) {
-// No filter implemented we return all the list
+                // No filter implemented we return all the list
                     results.values = elus;
                     results.count = elus.size();
                 } else {
-// We perform filtering operation
+                // We perform filtering operation
 
                     String function = constraint.toString();
                     for (Politicien polo : elus) {
@@ -118,8 +118,17 @@ public class PoliticienAdapter extends BaseAdapter implements Filterable{
                 return results;
             }
 
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                   elus = (ArrayList<Politicien>) results.values;
+                    notifyDataSetChanged();
+            }
+
+
         };
         return filter;
+
     }
 
 }
+
